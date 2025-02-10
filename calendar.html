@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Calendar</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="calendar.css">
+    </head>
+    <body>
+        <div class="container">
+         <h1 id="month-year">January 2025</h1>
+         <button id="previous-btn">Prev</button>
+         <button id="next-btn">Next</button>
+         <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                        <th>Sun</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body">
+                    <tr>
+                        <td class="empty"></td>
+                        <td></td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>10</td>
+                        <td>11</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>14</td>
+                        <td>15</td>
+                        <td>16</td>
+                        <td>17</td>
+                        <td>18</td>
+                        <td>19</td>
+                    </tr>
+                    <tr>
+                        <td>20</td>
+                        <td>21</td>
+                        <td>22</td>
+                        <td>23</td>
+                        <td>24</td>
+                        <td>25</td>
+                        <td>26</td>
+                    </tr>
+                    <tr>
+                        <td>27</td>
+                        <td>28</td>
+                        <td>29</td>
+                        <td>30</td>
+                        <td>31</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </body>
+    <script>
+       const monthYearElem = document.getElementById("month-year");
+       const calendarBody = document.getElementById("calendar-body");
+       const previousBtn = document.getElementById("previous-btn");
+       const nextBtn = document.getElementById("next-btn");
+
+       let currentDate = new Date(2025, 0, 1);
+       let selectedDate = null;
+
+       function renderCalendar () {
+        const month = currentDate.getMonth();
+        const year = currentDate.getFullYear();
+        monthYearElem.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
+
+    
+
+       calendarBody.innerHTML = "";
+
+       const firstDay = new Date(year, month, 1).getDay();
+       const daysInMonth = new Date(year, month + 1, 0).getDate();
+       const today = new Date();
+
+       let day = 1;
+    let row = document.createElement("tr");
+    
+     for (let i = 0; i < firstDay; i++) {
+     row.appendChild(document.createElement("td"));
+     }
+
+     for (let i = firstDay; i < 7; i++) {
+            const cell = document.createElement("td");
+            cell.textContent = day;
+
+            if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+            cell.classList.add("today");
+        }
+
+        cell.addEventListener("click", () => selectDate(cell, day));
+
+            row.appendChild(cell);
+            day++;
+     }
+
+    calendarBody.appendChild(row);
+
+    while (day <= daysInMonth) {
+                    row = document.createElement("tr");
+                    for (let i = 0; i < 7; i++) {
+                        if (day <= daysInMonth) {
+                            const cell = document.createElement("td");
+                            cell.textContent = day;
+
+                            if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                             cell.classList.add("today");
+                           }
+                           cell.addEventListener("click", () => selectDate(cell, day));
+
+                            row.appendChild(cell);
+                            day++;
+                        } else {
+                            row.appendChild(document.createElement("td"));
+                        }
+                    }
+                    calendarBody.appendChild(row);
+                }
+            }
+
+    function selectDate(cell, day) {
+    const allCells = calendarBody.getElementsByTagName("td");
+    for (let i = 0; i < allCells.length; i++) {
+        allCells[i].classList.remove("selected");
+    }
+
+    cell.classList.add("selected");
+
+    selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+}
+
+    previousBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+    });
+
+    nextBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+    });
+
+    renderCalendar();
+    </script>
+</html>
